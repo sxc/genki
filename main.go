@@ -7,10 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
-
-var DB *gorm.DB
 
 func main() {
 	r := gin.Default()
@@ -24,6 +21,7 @@ func main() {
 	models.DBMigrate()
 
 	r.GET("/notes", controllers.NotesIndex)
+	r.GET("/notes/new", controllers.NotesNew)
 
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "views/index.html", gin.H{

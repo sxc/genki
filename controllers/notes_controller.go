@@ -17,3 +17,11 @@ func NotesIndex(c *gin.Context) {
 		},
 	)
 }
+
+func NotesNew(c *gin.Context) {
+	c.HTML(
+		http.StatusOK,
+		"notes/new.html",
+		gin.H{},
+	)
+}
