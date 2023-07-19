@@ -14,3 +14,9 @@ type Note struct {
 	UpdatedAt time.Time      `gorm:"index"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
+
+func NotesAll() *[]Note {
+	var notes []Note
+	DB.Where("deleted_at IS NULL").Order("created_at DESC").Find(&notes)
+	return &notes
+}
