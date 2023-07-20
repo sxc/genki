@@ -10,7 +10,25 @@ import (
 )
 
 func NotesIndex(c *gin.Context) {
-	notes := models.NotesAll()
+	// currentUser := helpers.GetUserFromRequest(c)
+	userID := c.GetUint64("user_id")
+	var currentUser *models.User
+	if userID > 0 {
+		currentUser = models.UserFind(userID)
+	} else {
+		currentUser = nil
+	}
+	if currentUser == nil || currentUser.ID == 0 {
+		c.HTML(
+			http.StatusUnauthorized,
+			"notes/index.html",
+			gin.H{
+				"alert": "Unauthorized Access!",
+			},
+		)
+		return
+	}
+	notes := models.NotesAll(currentUser)
 	c.HTML(
 		http.StatusOK,
 		"notes/index.html",
@@ -29,19 +47,55 @@ func NotesNew(c *gin.Context) {
 }
 
 func NotesCreate(c *gin.Context) {
+	// currentUser := helpers.GetUserFromRequest(c)
+	userID := c.GetUint64("user_id")
+	var currentUser *models.User
+	if userID > 0 {
+		currentUser = models.UserFind(userID)
+	} else {
+		currentUser = nil
+	}
+	if currentUser == nil || currentUser.ID == 0 {
+		c.HTML(
+			http.StatusUnauthorized,
+			"notes/index.html",
+			gin.H{
+				"alert": "Unauthorized Access!",
+			},
+		)
+		return
+	}
 	name := c.PostForm("name")
 	content := c.PostForm("content")
-	models.NoteCreate(name, content)
+	models.NoteCreate(currentUser, name, content)
 	c.Redirect(http.StatusMovedPermanently, "notes")
 }
 
 func NotesShow(c *gin.Context) {
+	// currentUser := helpers.GetUserFromRequest(c)
+	userID := c.GetUint64("user_id")
+	var currentUser *models.User
+	if userID > 0 {
+		currentUser = models.UserFind(userID)
+	} else {
+		currentUser = nil
+	}
+	if currentUser == nil || currentUser.ID == 0 {
+		c.HTML(
+			http.StatusUnauthorized,
+			"notes/index.html",
+			gin.H{
+				"alert": "Unauthorized Access!",
+			},
+		)
+		return
+	}
 	idstr := c.Param("id")
 	id, err := strconv.ParseUint(idstr, 10, 64)
 	if err != nil {
 		fmt.Printf("Error: %v", err)
 	}
-	note := models.NotesFind(id)
+	note := models.NotesFind(currentUser, id)
 	c.HTML(
 		http.StatusOK,
 		"notes/show.html",
@@ -52,12 +106,30 @@ func NotesShow(c *gin.Context) {
 }
 
 func NotesEditPage(c *gin.Context) {
+	// currentUser := helpers.GetUserFromRequest(c)
+	userID := c.GetUint64("user_id")
+	var currentUser *models.User
+	if userID > 0 {
+		currentUser = models.UserFind(userID)
+	} else {
+		currentUser = nil
+	}
+	if currentUser == nil || currentUser.ID == 0 {
+		c.HTML(
+			http.StatusUnauthorized,
+			"notes/index.html",
+			gin.H{
+				"alert": "Unauthorized Access!",
+			},
+		)
+		return
+	}
 	idstr := c.Param("id")
 	id, err := strconv.ParseUint(idstr, 10, 64)
 	if err != nil {
 		fmt.Printf("Error: %v", err)
 	}
-	note := models.NotesFind(id)
+	note := models.NotesFind(currentUser, id)
 	c.HTML(
 		http.StatusOK,
 		"notes/edit.html",
@@ -68,12 +140,30 @@ func NotesEditPage(c *gin.Context) {
 }
 
 func NotesUpdate(c *gin.Context) {
+	// currentUser := helpers.GetUserFromRequest(c)
+	userID := c.GetUint64("user_id")
+	var currentUser *models.User
+	if userID > 0 {
+		currentUser = models.UserFind(userID)
+	} else {
+		currentUser = nil
+	}
+	if currentUser == nil || currentUser.ID == 0 {
+		c.HTML(
+			http.StatusUnauthorized,
+			"notes/index.html",
+			gin.H{
+				"alert": "Unauthorized Access!",
+			},
+		)
+		return
+	}
 	idstr := c.Param("id")
 	id, err := strconv.ParseUint(idstr, 10, 64)
 	if err != nil {
 		fmt.Printf("Error: %v", err)
 	}
-	note := models.NotesFind(id)
+	note := models.NotesFind(currentUser, id)
 	name := c.PostForm("name")
 	content := c.PostForm("content")
 	note.Update(name, content)
@@ -81,11 +171,29 @@ func NotesUpdate(c *gin.Context) {
 }
 
 func NotesDelete(c *gin.Context) {
+	// currentUser := helpers.GetUserFromRequest(c)
+	userID := c.GetUint64("user_id")
+	var currentUser *models.User
+	if userID > 0 {
+		currentUser = models.UserFind(userID)
+	} else {
+		currentUser = nil
+	}
+	if currentUser == nil || currentUser.ID == 0 {
+		c.HTML(
+			http.StatusUnauthorized,
+			"notes/index.html",
+			gin.H{
+				"alert": "Unauthorized Access!",
+			},
+		)
+		return
+	}
 	idstr := c.Param("id")
 	id, err := strconv.ParseUint(idstr, 10, 64)
 	if err != nil {
 		fmt.Printf("Error: %v", err)
 	}
-	models.NotesMarkDelete(id)
+	models.NotesMarkDelete(currentUser, id)
 	c.Redirect(http.StatusSeeOther, "/notes")
 }
