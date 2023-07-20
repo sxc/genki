@@ -25,3 +25,10 @@ func NotesNew(c *gin.Context) {
 		gin.H{},
 	)
 }
+
+func NotesCreate(c *gin.Context) {
+	name := c.PostForm("name")
+	content := c.PostForm("content")
+	models.NoteCreate(name, content)
+	c.Redirect(http.StatusMovedPermanently, "notes")
+}

@@ -20,3 +20,12 @@ func NotesAll() *[]Note {
 	DB.Where("deleted_at IS NULL").Order("created_at DESC").Find(&notes)
 	return &notes
 }
+
+func NoteCreate(name string, content string) *Note {
+	entry := Note{
+		Name:    name,
+		Content: content,
+	}
+	DB.Create(&entry)
+	return &entry
+}

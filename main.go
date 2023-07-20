@@ -22,6 +22,7 @@ func main() {
 
 	r.GET("/notes", controllers.NotesIndex)
 	r.GET("/notes/new", controllers.NotesNew)
+	r.POST("/notes", controllers.NotesCreate)
 
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "views/index.html", gin.H{
@@ -29,6 +30,6 @@ func main() {
 		})
 	})
 
-	log.Println("Server startd!")
-	r.Run(":8080") // Default Port 8080
+	log.Println("Server startd at port 3000!")
+	r.Run(":3000") // Default
 }
