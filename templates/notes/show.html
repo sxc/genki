@@ -2,10 +2,16 @@
     {{ template "layouts/header.html" .}}
     {{ range .}}
     <div class="col">
-                <div class="card h-200">
-                    <h5 class="card-title">{{ .Name }}</h5>
+                {{/* <div class="card h-200"> */}}
+                    <h1 class="card-title">{{ .Name }}</h5>
                     <p class="card-text">{{ .Content }}</p>
-                </div>
+                    <p>
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-outline-primary" href="/notes/edit/{{ .ID }}" role="button">Edit</a>
+                            <a class="btn btn-outline-primary" href="/notes/delete/{{ .ID }}" role="button">Delete</a>
+                        </div>
+
+                {{/* </div> */}}
             </div>
     {{ end }}
 
