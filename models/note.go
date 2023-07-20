@@ -29,3 +29,10 @@ func NoteCreate(name string, content string) *Note {
 	DB.Create(&entry)
 	return &entry
 }
+
+func NotesFind(id uint64) *Note {
+	var note Note
+	// DB.First(&note, id)
+	DB.Where("id = ?", id).First(&note)
+	return &note
+}

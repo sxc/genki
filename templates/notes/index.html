@@ -2,13 +2,19 @@
 {{ template "layouts/header.html" .}}
     <h1>All notes</h1>
 
-    <ul>
+    <div class="row row-cols-1 row-cols-md-6 g-4">
         {{ with .notes }}
          {{ range . }}
-            <li><td>{{ .Name }}</td></li>
+            <div class="col">
+                <div class="card h-200">
+                    <h5 class="card-title">{{ .Name }}</h5>
+                    <p class="card-text">{{ .Content }}</p>
+                    <a class="btn btn-online-primary" href="/notes/{{ .ID }}" role="button">View</a>
+                </div>
+            </div>
          {{ end }}
         {{ end }}
-    </ul>
+    </div>
 
     <p>
         <a class="btn btn-outline-primary" href="/notes/new" role="button">New note</a>

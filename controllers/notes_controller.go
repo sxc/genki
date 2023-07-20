@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"genki/models"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,4 +33,20 @@ func NotesCreate(c *gin.Context) {
 	content := c.PostForm("content")
 	models.NoteCreate(name, content)
 	c.Redirect(http.StatusMovedPermanently, "notes")
+}
+
+func NotesShow(c *gin.Context) {
+	idstr := c.Param("id")
+	id, err := strconv.ParseUint(idstr, 10, 64)
+	if err != nil {
+		fmt.Printf("Error: %v", err)
+	}
+	note := models.NotesFind(id)
+	c.HTML(
+		http.StatusOK,
+		"notes/show.html",
+		gin.H{
+			"note": note,
+		},
+	)
 }
