@@ -2,10 +2,13 @@ package main
 
 import (
 	"genki/controllers"
+	"genki/middlewares"
 	"genki/models"
 	"log"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,6 +23,12 @@ func main() {
 	models.ConnectDatabase()
 	models.DBMigrate()
 
+	// Sessions INit
+	store := memstore.NewStore([]byte("secret"))
+	r.Use(sessions.Sessions("notes", store))
+
+	r.Use(middlewares.AuthenticateUser())
+
 	r.GET("/notes", controllers.NotesIndex)
 	r.GET("/notes/new", controllers.NotesNew)
 	r.POST("/notes", controllers.NotesCreate)
@@ -31,9 +40,14 @@ func main() {
 	r.GET("/login", controllers.LoginPage)
 	r.GET("/signup", controllers.SignupPage)
 
+	r.POST("/login", controllers.Login)
+	r.POST("/signup", controllers.Signup)
+	r.POST("/logout", controllers.Logout)
+
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "home/index.html", gin.H{
-			"title": "My awesome Website",
+			"title":     "My awesome Website",
+			"logged_in": (c.GetUint64("user_id") > 0),
 		})
 	})
 
