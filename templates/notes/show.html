@@ -1,5 +1,23 @@
 {{ define "notes/show.html" }}
     {{ template "layouts/header.html" .}}
+    <script>
+        function sendDelete(event, href) {
+            var xhttp = new XMLHttpRequest();
+            event.preventDefault();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState !== 4 ) {
+                    return;
+                }
+
+                if (this.readyState == 4) {
+                window.location.replace(this.responseURL);
+                }
+            };
+            xhttp.open("DELETE", href, true);
+            xhttp.send();
+        }
+    </script>
+
     {{ range .}}
     <div class="col">
                 {{/* <div class="card h-200"> */}}
@@ -8,7 +26,7 @@
                     <p>
                         <div class="btn-group" role="group">
                             <a class="btn btn-outline-primary" href="/notes/edit/{{ .ID }}" role="button">Edit</a>
-                            <a class="btn btn-outline-primary" href="/notes/delete/{{ .ID }}" role="button">Delete</a>
+                            <a class="btn btn-outline-primary" href="/notes/{{ .ID }}" onclick="sendDelete(event, this.href)" role="button">Delete</a>
                         </div>
 
                 {{/* </div> */}}
