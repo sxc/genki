@@ -46,6 +46,11 @@ func NotesNew(c *gin.Context) {
 	)
 }
 
+type FormData struct {
+	Name    string `form:"name"`
+	Content string `form:"content"`
+}
+
 func NotesCreate(c *gin.Context) {
 	// currentUser := helpers.GetUserFromRequest(c)
 	userID := c.GetUint64("user_id")
@@ -65,10 +70,10 @@ func NotesCreate(c *gin.Context) {
 		)
 		return
 	}
-	name := c.PostForm("name")
-	content := c.PostForm("content")
-	models.NoteCreate(currentUser, name, content)
-	c.Redirect(http.StatusMovedPermanently, "notes")
+	var data FormData
+	c.Bind(&data)
+	models.NoteCreate(currentUser, data.Name, data.Content)
+	c.Redirect(http.StatusMovedPermanently, "/notes")
 }
 
 func NotesShow(c *gin.Context) {
